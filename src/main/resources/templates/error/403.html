@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/template.html :: headerfiles">
+        </th:block> /*/-->
+</head>
+<body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+<div th:replace="fragments/template.html :: header"></div>
+<div class="container">
+    <div id="layoutError">
+        <div id="layoutError_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <img class="img-fluid" th:src="@{/image/error-403.jpg}"/>
+                            <div class="text-center mt-4">
+                                <p class="lead">User not allowed.</p>
+                                <a class="btn btn-link" th:href="@{/}">
+                                    <i class="fas fa-arrow-left mr-1"></i>
+                                    Go home
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <br>
+    </div>
+</div>
+<div th:replace="fragments/template.html :: footer"></div>
+</body>
+</html>

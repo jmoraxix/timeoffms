@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerfiles">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="UTF-8" />
+    <title>Time Off Management System</title>
+    <!-- <link rel="shortcut icon" type="image/png" th:href="@{/image/favicon.ico}"/> -->
+
+    <!-- CSS only -->
+    <link th:href="@{/css/reset.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
+<body>
+<header th:fragment="header">
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+        <!--  NAVBAR  -->
+        <a class="navbar-brand" th:href="@{/}">Time Off Management System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" th:href="@{/home/}">Home</a>-->
+<!--                </li>-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" th:href="@{/admin/user/list}">Users</a>
+                        <a class="dropdown-item" th:href="@{/admin/user/role/list}">Roles</a>
+                        <a class="dropdown-item" th:href="@{/admin/sitecode/list}">Site Codes</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:href="@{/actuator/health}">Actuator Health</a>
+                        <a class="dropdown-item" th:href="@{/actuator/info}">Actuator Info</a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item dropdown">
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="navbarDropdownUser" role="button">
+                        Welcome <span sec:authentication="name">Username</span>
+                    </a>
+                    <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                        <a class="dropdown-item" th:href="@{/user/{id}(id=${#authentication.name})}">My account</a>
+                        <span th:if="${#authorization.expression('isAuthenticated()')}">
+                            <a class="dropdown-item" href="/logout" th:href="@{/logout}">Logout</a>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div th:fragment="notifications_modal">
+    <div th:if="${message != null}">
+        <!-- Notifications modal fragment -->
+        <!--Modal-->
+        <div class="modal" tabindex="-1" role="dialog" id="messageModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <span th:text="${mensaje}"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(window).on('load', function(){
+                $('#messageModal').modal('show');
+            });
+        </script>
+        <!--//Modal-->
+    </div>
+</div>
+
+<div th:fragment="footer" th:align="center" class="page-footer fixed-bottom bg-primary text-white">
+    <!--  Application footer  -->
+    <div class="footer-copyright text-center py-3">
+        &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2020</span>
+        <span>Time Off Management System</span>
+    </div>
+</div>
+</body>
+</html>
