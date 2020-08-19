@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -56,6 +57,11 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams;
+
+    public void addUserRole(Role newRole){
+        if(roles == null) roles = new HashSet<>();
+        roles.add(newRole);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
