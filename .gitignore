@@ -23,6 +23,7 @@
 hs_err_pid*
 
 # Other
+.DS_Store
 .idea/
 target/
 src/main/resources/application.properties
