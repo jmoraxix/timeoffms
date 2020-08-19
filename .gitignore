@@ -22,8 +22,14 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Other
-.DS_Store
+# IntelliJ project files and directories
 .idea/
+.settings/
 target/
 src/main/resources/application.properties
+/.classpath
+/.factorypath
+/.project
+
+# Other
+.DS_Store
