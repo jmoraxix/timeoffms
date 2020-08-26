@@ -1,13 +1,16 @@
 package com.timeoffms.web.model;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +19,7 @@ import java.util.Set;
 @Entity
 @Validated
 @Table(name = "user")
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue
@@ -27,10 +30,11 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
-    private String passwd;
+    private String password;
 
     @NotNull
     @Column(unique=true)
+    @Email
     private String email;
 
     @NotNull
@@ -40,61 +44,42 @@ public class User implements UserDetails {
     private String lastName;
 
     @NotNull
-    private OffsetDateTime startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime startDate;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", referencedColumnName="id")
-    private Set<PhoneNumber> phoneNumbers;
+    private Set<PhoneNumber> phoneNumbers = new HashSet<PhoneNumber>();
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
-    private Set<Team> teams;
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
+    private Collection<Team> teams;
 
     public void addUserRole(Role newRole){
         if(roles == null) roles = new HashSet<>();
         roles.add(newRole);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+    private int getAvailableVacationDays(){
+        LocalDateTime today = LocalDateTime.now();
+        Period age = Period.between(startDate.toLocalDate(), today.toLocalDate());
+        int years = age.getYears();
+        int months = age.getMonths();
+
+        return years * 12 + months;
     }
 
-    @Override
-    public String getPassword() {
-        return passwd;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public String getFullname(){
+        return this.firstName + " " + this.lastName;
     }
 }

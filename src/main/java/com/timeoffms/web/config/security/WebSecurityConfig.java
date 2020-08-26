@@ -1,35 +1,36 @@
 package com.timeoffms.web.config.security;
 
+import com.timeoffms.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    CustomAuthenticationProvider customAuthProvider;
-    String[] resources = new String[]{
-            "/css/**", "/js/**", "/image/**"
-    };
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(customAuthProvider);
-    }
+    @Autowired
+    private UserService userService;
+
+    String[] resources = new String[]{
+            "/css/**", "/js/**", "/img/**"
+    };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+//                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(resources).permitAll()
-                .antMatchers("/admin*").access("hasRole('ADMIN')")
-                .antMatchers("/actuator*").access("hasRole('ADMIN')")
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/actuator/**").hasRole("ADMIN")
 //                .antMatchers("/*").access("hasRole('USER')")
                 .antMatchers("/login*").permitAll()
                 .anyRequest().authenticated()
@@ -39,8 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error=true")
-                .usernameParameter("username")
-                .passwordParameter("password")
                 .and()
                 .logout()
                 .permitAll()
@@ -48,6 +47,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login?logout");
+    }
+
+    @Bean
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+        auth.setUserDetailsService(userService);
+        auth.setPasswordEncoder(getPasswordEncoder());
+        return auth;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
     }
 
 }

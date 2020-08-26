@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div class="wrapper fadeInDown">
         <div id="formContent">
@@ -24,6 +25,9 @@
                 <div class="alert alert-success" th:if="${param.logout}">
                     You have been logged out.
                 </div>
+                <div class="alert alert-success" th:if="${param.registerSuccess}">
+                    User created successfully.
+                </div>
                 <input class="fadeIn second" id="login" name="username" placeholder="User" type="text">
                 <input class="fadeIn third" id="password" name="password" placeholder="Password" type="password">
                 <input class="fadeIn fourth" type="submit" value="Log In">
@@ -36,7 +40,7 @@
                         <a class="underlineHover" href="#">Forgot password?</a>
                     </div>
                     <div class="col-md-6">
-                        <a class="underlineHover" href="#">Register</a>
+                        <a class="underlineHover" th:href="@{/registration}">Register</a>
                     </div>
                 </div>
             </div>
@@ -44,6 +48,6 @@
         </div>
     </div>
 </div>
-
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

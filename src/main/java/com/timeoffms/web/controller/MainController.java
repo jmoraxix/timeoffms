@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @Log4j2
-public class HomeController {
+public class MainController {
 
    @GetMapping("/login")
    public ModelAndView showLogin(ModelMap model) {
