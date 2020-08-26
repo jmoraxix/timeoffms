@@ -5,15 +5,15 @@
         </th:block> /*/-->
 </head>
 <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-<div th:replace="fragments/template.html :: header"></div>
+<div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div id="layoutError">
         <div id="layoutError_content">
             <main>
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-lg-6">
-                            <img class="img-fluid" th:src="@{/image/error-403.jpg}"/>
+                        <div class="col-12">
+                            <img class="img-fluid" th:src="@{/img/error-403.jpg}"/>
                             <div class="text-center mt-4">
                                 <p class="lead">User not allowed.</p>
                                 <a class="btn btn-link" th:href="@{/}">
@@ -29,6 +29,6 @@
         <br>
     </div>
 </div>
-<div th:replace="fragments/template.html :: footer"></div>
+<div th:replace="fragments/footer"></div>
 </body>
 </html>
