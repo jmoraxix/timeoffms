@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form th:action="@{/admin/countries/{mode}/{id}(mode=${editMode},id=${country.code})}" method="post" th:object="${country}">
+                <label>Country</label>
+                <div class="form-group">
+                    <input type="text" th:field="*{code}" placeholder="Country code" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" th:field="*{name}" placeholder="Country name" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" th:field="*{dialCode}" placeholder="Dial code" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <a th:href="@{/admin/countries}" class="btn btn-warning">Back</a>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

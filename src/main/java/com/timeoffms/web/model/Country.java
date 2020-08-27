@@ -22,6 +22,4 @@ public class Country {
 
     @NotNull
     private String dialCode;
-
-    private int order;
 }
