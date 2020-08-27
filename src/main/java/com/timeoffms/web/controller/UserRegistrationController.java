@@ -1,7 +1,7 @@
 package com.timeoffms.web.controller;
 
+import com.timeoffms.web.dto.UserRegistrationDto;
 import com.timeoffms.web.model.User;
-import com.timeoffms.web.model.dto.UserRegistrationDto;
 import com.timeoffms.web.service.CountryService;
 import com.timeoffms.web.service.UserService;
 import lombok.extern.log4j.Log4j2;

@@ -16,4 +16,16 @@ public class RoleService {
 	public List<Role> findAll(){
 		return roleRepository.findAll();
 	}
+
+	public Role findRole(Long id){
+		return roleRepository.findById(id).get();
+	}
+
+	public void saveRole(Role role){
+		roleRepository.save(role);
+	}
+
+	public void deleteRole(Long id){
+		roleRepository.deleteById(id);
+	}
 }

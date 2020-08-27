@@ -2,7 +2,6 @@ package com.timeoffms.web.model;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -11,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Validated
 @Table(name = "role")
-public class Role implements GrantedAuthority {
+public class Role {
 
 	@Id
 	@GeneratedValue
@@ -22,9 +21,4 @@ public class Role implements GrantedAuthority {
 	private String name;
 
 	private String description;
-
-	@Override
-	public String getAuthority() {
-		return name.toUpperCase();
-	}
 }

@@ -1,4 +1,4 @@
-package com.timeoffms.web.model.dto;
+package com.timeoffms.web.dto;
 
 import com.timeoffms.web.constraint.FieldMatch;
 import com.timeoffms.web.model.Country;

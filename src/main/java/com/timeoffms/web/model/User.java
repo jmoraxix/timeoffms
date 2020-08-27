@@ -1,6 +1,8 @@
 package com.timeoffms.web.model;
 
+import com.timeoffms.web.model.listeners.UserJpaCallbacksListener;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,11 +13,11 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
+@EntityListeners({UserJpaCallbacksListener.class})
 @Entity
 @Validated
 @Table(name = "user")
@@ -49,37 +51,66 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", referencedColumnName="id")
-    private Set<PhoneNumber> phoneNumbers = new HashSet<PhoneNumber>();
+    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+//    @OneToMany
+//    @JoinColumn(name="user_id", referencedColumnName="id")
+//    private List<Overtime> overtimes;
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
+
+    @ManyToMany
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
-    private Collection<Team> teams;
+    private List<Team> teams;
+
+    @ManyToMany
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "approver", joinColumns = @JoinColumn(name = "approver_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
+    private List<User> approves;
+
+    @Transient
+    private Double overtimeExtraDays = 0.0;
+
+    @Transient
+    private int expendedVacationDays = 0;
 
     public void addUserRole(Role newRole){
-        if(roles == null) roles = new HashSet<>();
+        if(roles == null) roles = new ArrayList<>();
         roles.add(newRole);
     }
 
-    private int getAvailableVacationDays(){
+    public double getAvailableVacationDays(){
+        return getTotalVacationDays() + this.overtimeExtraDays - expendedVacationDays;
+    }
+
+    private double getTotalVacationDays(){
         LocalDateTime today = LocalDateTime.now();
         Period age = Period.between(startDate.toLocalDate(), today.toLocalDate());
         int years = age.getYears();
         int months = age.getMonths();
 
-        return years * 12 + months;
+        return (years * 12) + months;
     }
 
     public String getFullname(){
         return this.firstName + " " + this.lastName;
+    }
+
+    public boolean isApprover(){
+        return this.hasRole("APPROVER");
+    }
+
+    public boolean hasRole(String role){
+        return this.roles.stream().anyMatch(currRole -> currRole.getName().startsWith(role));
     }
 }

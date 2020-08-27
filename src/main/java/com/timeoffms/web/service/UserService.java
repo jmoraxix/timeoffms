@@ -1,9 +1,9 @@
 package com.timeoffms.web.service;
 
 import com.timeoffms.web.dao.UserRepository;
-import com.timeoffms.web.model.Role;
+import com.timeoffms.web.dto.UserRegistrationDto;
+import com.timeoffms.web.model.Team;
 import com.timeoffms.web.model.User;
-import com.timeoffms.web.model.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -46,6 +46,10 @@ public class UserService implements UserDetailsService {
 		userRepository.deleteById(id);
 	}
 
+	public boolean existsById(Long id){
+		return userRepository.existsById(id);
+	}
+
 	public User save(UserRegistrationDto registration) {
 		User user = new User();
 		user.setUsername(registration.getUsername());
@@ -66,12 +70,20 @@ public class UserService implements UserDetailsService {
 		}
 		return new org.springframework.security.core.userdetails.User(user.getUsername(),
 				user.getPassword(),
-				mapRolesToAuthorities(user.getRoles()));
+				mapRolesToAuthorities(user));
 	}
 
-	private Collection < ? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-		return roles.stream()
+	private Collection < ? extends GrantedAuthority> mapRolesToAuthorities(User user) {
+		Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
+
+		for(Team team : user.getTeams()){
+			authorities.add(new SimpleGrantedAuthority("MEMBER_" + team.getName().replaceAll(" ", "_").toUpperCase()));
+			if(team.isApprover(user)){
+				authorities.add(new SimpleGrantedAuthority("APPROVER"));
+			}
+		}
+		return authorities.stream().distinct().collect(Collectors.toSet());
 	}
 }
