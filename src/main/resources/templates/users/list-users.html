@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8"><h1>Users</h1></div>
+        <div class="col-md-4">
+            <div class="float-right">
+                <a th:href="@{/admin/user/create}" class="btn btn-success">
+                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+                        <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <!--Table-->
+            <table id="userTable" class="table table-striped">
+                <!--Table head-->
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone(s)</th>
+                        <th>Roles</th>
+                        <th>Teams</th>
+                        <th>View</th>
+                        <th>Update</th>
+                        <th>Phone<br/>Numbers</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+                <!--Table body-->
+                <tbody>
+                    <tr th:if="${userList.empty}">
+                        <td colspan="10">There are no users available</td>
+                    </tr>
+                    <tr th:each="userTmp : ${userList}">
+                        <td scope="row" th:text="${userTmp.id}"/>
+                        <td th:text="${userTmp.username}"/>
+                        <td th:text="${userTmp.fullname}"/>
+                        <td th:text="${userTmp.email}"/>
+                        <td>
+                            <div th:each="phone, itemStat : ${userTmp.phoneNumbers}">
+                                <span th:text="*{!itemStat.last ?
+                                                    phone.parsedPhoneNumber + ', ' :
+                                                    phone.parsedPhoneNumberd}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div th:each="role, itemStat : ${userTmp.roles}">
+                                <span th:text="*{!itemStat.last ?
+                                                    role.name + ', ' :
+                                                    role.name}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div th:each="team, itemStat : ${userTmp.teams}">
+                                <span th:text="*{!itemStat.last ?
+                                                    team.name + ', ' :
+                                                    team.name}"></span>
+                            </div>
+                        </td>
+                        <td><a th:href="@{/admin/user/{id}(id=${userTmp.id})}" class="btn btn-info">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                            </svg>
+                        </a></td>
+                        <td><a th:href="@{/admin/user/edit/{id}(id=${userTmp.id})}" class="btn btn-primary">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"/>
+                                <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"/>
+                            </svg>
+                        </a></td>
+                        <td><a th:href="@{/admin/user/{id}/phone(userId=${userTmp.id})}" class="btn btn-secondary">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-telephone" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M3.925 1.745a.636.636 0 0 0-.951-.059l-.97.97c-.453.453-.62 1.095-.421 1.658A16.47 16.47 0 0 0 5.49 10.51a16.471 16.471 0 0 0 6.196 3.907c.563.198 1.205.032 1.658-.421l.97-.97a.636.636 0 0 0-.06-.951l-2.162-1.682a.636.636 0 0 0-.544-.115l-2.052.513a1.636 1.636 0 0 1-1.554-.43L5.64 8.058a1.636 1.636 0 0 1-.43-1.554l.513-2.052a.636.636 0 0 0-.115-.544L3.925 1.745zM2.267.98a1.636 1.636 0 0 1 2.448.153l1.681 2.162c.309.396.418.913.296 1.4l-.513 2.053a.636.636 0 0 0 .167.604L8.65 9.654a.636.636 0 0 0 .604.167l2.052-.513a1.636 1.636 0 0 1 1.401.296l2.162 1.681c.777.604.849 1.753.153 2.448l-.97.97c-.693.693-1.73.998-2.697.658a17.47 17.47 0 0 1-6.571-4.144A17.47 17.47 0 0 1 .639 4.646c-.34-.967-.035-2.004.658-2.698l.97-.969z"/>
+                            </svg>
+                        </a></td>
+                        <td><a th:href="@{/admin/user/delete/{id}(id=${userTmp.id})}" class="btn btn-danger">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                            </svg>
+                        </a></td>
+                    </tr>
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: notifications_modal"></div>
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>
