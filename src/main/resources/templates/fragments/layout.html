@@ -32,10 +32,16 @@
         <div class="collapse navbar-collapse" id="navbarNav" th:if="${#authorization.expression('isAuthenticated()')}">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/myrequests}">My requests</a>
+                    <a class="nav-link" th:href="@{/myRequests}">My requests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/myTeam}">My team</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/myReviews}">My reviews</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('APPROVER')">
-                    <a class="nav-link" th:href="@{/requests}">My approvals</a>
+                    <a class="nav-link" th:href="@{/myApprovals}">My approvals</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('HR', 'ADMIN')">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownHr" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,6 +49,8 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" th:href="@{/hr/requests}">All requests</a>
+                        <a class="dropdown-item" th:href="@{/hr/approvals}">All approvals</a>
+                        <a class="dropdown-item" th:href="@{/hr/reviews}">All reviews</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" th:href="@{/hr/user}">Manage users</a>
                         <a class="dropdown-item" th:href="@{/hr/teams}">Manage teams</a>
