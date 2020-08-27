@@ -1,0 +1,43 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="formField (field, value, size)">
+    <div>
+        <label th:for="${#strings.toLowerCase(field)}"> <span
+                th:text="${field}">Field</span>
+        </label>
+    </div>
+    <div>
+        <input type="text" th:id="${#strings.toLowerCase(field)}"
+               th:name="${#strings.toLowerCase(field)}" th:value="${value}"
+               th:size="${size}">
+    </div>
+</div>
+
+
+
+<div th:fragment="addFieldModal(title, field, options)">
+    <div class="modal" tabindex="-1" role="dialog" th:id="|add${field}Modal|">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <label th:for="|add${field}|" th:text="${title}"/>
+                    <select class="form-control" th:id="|add${field}|">
+                        <option selected disabled value="">Choose...</option>
+                        <!--/* Placeholder for select options */-->
+                        <th:block th:replace="${options}" />
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" th:id="|add${field}Btn|" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
