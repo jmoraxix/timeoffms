@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <!--/*/ <th:block th:include="fragments/template.html :: headerfiles">
-    </th:block> /*/-->
+<head th:replace="fragments/layout :: common_header(_,~{::link})">
     <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/layout :: header"></div>
 <div class="container">
     <div class="wrapper fadeInDown">
         <div id="formContent">
@@ -14,7 +12,9 @@
 
             <!-- Icon -->
             <div class="fadeIn first">
-                <img alt="Time Off MS Icon" id="icon" src="http://danielzawadzki.com/codepen/01/icon.svg"/>
+                <svg class="d-inline-block align-top" alt="Time Off MS Icon" width="6em" height="6em" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <image width="5.5em" height="5.5em" xlink:href="data:img/png;base64,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" />
+                </svg>
             </div>
 
             <!-- Login Form -->
@@ -48,6 +48,6 @@
         </div>
     </div>
 </div>
-<footer th:replace="fragments/footer :: footer"></footer>
+<footer th:replace="fragments/layout :: footer"></footer>
 </body>
 </html>

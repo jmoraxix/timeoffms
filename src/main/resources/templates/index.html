@@ -1,18 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <!--/*/ <th:block th:include="fragments/template.html :: headerfiles">
-    </th:block> /*/-->
+<head th:replace="fragments/layout :: common_header(_,_)">
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
-<div class="container">
+<div th:replace="fragments/layout :: header"></div>
+<div class="container" >
 
     <div class="jumbotron">
         <h1>Welcome</h1>
     </div>
 
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/layout :: footer"></div>
 </body>
 </html>
