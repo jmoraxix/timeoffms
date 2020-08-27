@@ -2,7 +2,7 @@ package com.timeoffms.web.model;
 
 import lombok.Getter;
 
-public enum TimeOffRequestStatus {
+public enum OvertimeStatus {
 
 	PENDING_APPROVAL("Pending Approval"),
 	APPROVED("Approved"),
@@ -11,7 +11,7 @@ public enum TimeOffRequestStatus {
 
 	@Getter private String name;
 
-	private TimeOffRequestStatus(String name) {
+	private OvertimeStatus(String name) {
 		this.name = name;
 	}
 }

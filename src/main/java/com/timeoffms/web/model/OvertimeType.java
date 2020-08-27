@@ -1,25 +1,20 @@
 package com.timeoffms.web.model;
 
-import com.sun.istack.NotNull;
-import lombok.Data;
-import org.springframework.validation.annotation.Validated;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public enum OvertimeType {
 
-@Data
-@Entity
-@Validated
-@Table(name = "overtime_type")
-public class OvertimeType {
+	OTHER("Other", 0),
+	FRONTLINE_QA("Frontline QA", 4);
 
-	@Id
-	private String code;
+	@Getter
+	private String name;
 
-	@NotNull
-	private String description;
-
-	@NotNull
+	@Getter
 	private int defaultHours;
+
+	private OvertimeType(String name, int defaultHours) {
+		this.name = name;
+		this.defaultHours = defaultHours;
+	}
 }

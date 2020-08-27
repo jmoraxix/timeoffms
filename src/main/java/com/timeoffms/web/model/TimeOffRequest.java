@@ -2,10 +2,13 @@ package com.timeoffms.web.model;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Data
 @Entity
@@ -19,19 +22,39 @@ public class TimeOffRequest {
 
 	@NotNull
 	@ManyToOne
-	private User user;
+	private User requestedBy;
 
 	@NotNull
-	@ManyToOne
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type")
 	private TimeOffRequestType timeOffRequestType;
 
-	@NotNull
-	private OffsetDateTime startDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm")
+	private LocalDateTime requestedDate = LocalDateTime.now();
 
 	@NotNull
-	private OffsetDateTime endDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm")
+	private LocalDateTime startDate;
 
 	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm")
+	private LocalDateTime endDate;
+
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private TimeOffRequestStatus timeOffRequestStatus = TimeOffRequestStatus.PENDING_APPROVAL;
+
+	private String reason;
+
 	@ManyToOne
-	private TimeOffRequestStatus timeOffRequestStatus;
+	private User updatedBy;
+
+	public String getRangeDates(){
+		return "From " + startDate.toString() + " to " + endDate;
+	}
+
+	public long getTotalDays(){
+		return DAYS.between(startDate, endDate);
+	}
 }

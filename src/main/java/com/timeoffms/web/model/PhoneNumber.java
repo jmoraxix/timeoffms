@@ -3,10 +3,7 @@ package com.timeoffms.web.model;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -16,6 +13,10 @@ import javax.validation.constraints.NotNull;
 public class PhoneNumber {
 
     @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @NotNull
@@ -24,6 +25,11 @@ public class PhoneNumber {
 
     @NotNull
     private String phoneNumber;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private PhoneNumberType phoneNumberType;
 
     public String getParsedPhoneNumber(){
         return country.getDialCode() + " " + phoneNumber;

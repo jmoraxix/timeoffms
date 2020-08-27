@@ -1,22 +1,18 @@
 package com.timeoffms.web.model;
 
-import com.sun.istack.NotNull;
-import lombok.Data;
-import org.springframework.validation.annotation.Validated;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public enum TimeOffRequestType {
 
-@Data
-@Entity
-@Validated
-@Table(name = "time_off_request_type")
-public class TimeOffRequestType {
+	VACATION("Vacation"),
+	COMPENSATION("Compensation"),
+	SICK_LEAVE("Sick leave"),
+	MATERNITY("Maternity"),
+	PATERNITY_LEAVE("Paternity leave");
 
-	@Id
-	private String code;
+	@Getter private String name;
 
-	@NotNull
-	private String description;
+	TimeOffRequestType(String name) {
+		this.name = name;
+	}
 }
