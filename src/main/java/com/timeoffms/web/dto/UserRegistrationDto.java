@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @FieldMatch.List({
 		@FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match")
@@ -36,8 +36,8 @@ public class UserRegistrationDto {
 	private String lastName;
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime startDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate joiningDate;
 
 	@NotNull
 	private Country country;

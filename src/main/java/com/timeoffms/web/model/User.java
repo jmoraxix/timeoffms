@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,8 @@ public class User {
     private String lastName;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime startDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate joiningDate;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", referencedColumnName="id")
@@ -57,32 +57,35 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
 
-//    @OneToMany
-//    @JoinColumn(name="user_id", referencedColumnName="id")
-//    private List<Overtime> overtimes;
+	private String location;
 
-    @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+	@ManyToOne
+	@JoinColumn(name= "direct_manager_id")
+	private User directManager;
 
-    @ManyToMany
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
-    private List<Team> teams;
+	@NotNull
+	@ToString.Exclude
+    @ManyToOne
+    private Team team;
 
-    @ManyToMany
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(name = "approver", joinColumns = @JoinColumn(name = "approver_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
-    private List<User> approves;
+	@ManyToMany
+	@ToString.Exclude
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private List<Role> roles;
 
-    @Transient
-    private Double overtimeExtraDays = 0.0;
 
-    @Transient
-    private int expendedVacationDays = 0;
+	//    @ManyToMany
+//    @ToString.Exclude
+//    @LazyCollection(LazyCollectionOption.FALSE)
+//    @JoinTable(name = "alternate_employee_approver", joinColumns = @JoinColumn(name = "approver_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
+//    private List<User> approves;
+
+//    @Transient
+//    private Double overtimeExtraDays = 0.0;
+//
+//    @Transient
+//    private int expendedVacationDays = 0;
 
     public void addUserRole(Role newRole){
         if(roles == null) roles = new ArrayList<>();
@@ -90,12 +93,11 @@ public class User {
     }
 
     public double getAvailableVacationDays(){
-        return getTotalVacationDays() + this.overtimeExtraDays - expendedVacationDays;
+        return getTotalVacationDays(); //+ this.overtimeExtraDays - expendedVacationDays;
     }
 
     private double getTotalVacationDays(){
-        LocalDateTime today = LocalDateTime.now();
-        Period age = Period.between(startDate.toLocalDate(), today.toLocalDate());
+        Period age = Period.between(joiningDate, LocalDate.now());
         int years = age.getYears();
         int months = age.getMonths();
 
@@ -113,4 +115,24 @@ public class User {
     public boolean hasRole(String role){
         return this.roles.stream().anyMatch(currRole -> currRole.getName().startsWith(role));
     }
+
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("User{");
+		sb.append("id=").append(id);
+		sb.append(", username='").append(username).append('\'');
+		sb.append(", password='").append(password).append('\'');
+		sb.append(", email='").append(email).append('\'');
+		sb.append(", firstName='").append(firstName).append('\'');
+		sb.append(", lastName='").append(lastName).append('\'');
+		sb.append(", joiningDate=").append(joiningDate);
+		sb.append(", phoneNumbers=").append(phoneNumbers);
+		sb.append(", country=").append(country);
+		sb.append(", location='").append(location).append('\'');
+		sb.append(", directManager=").append(directManager.getFullname());
+		sb.append(", team=").append(team);
+		sb.append(", roles=").append(roles);
+		sb.append('}');
+		return sb.toString();
+	}
 }

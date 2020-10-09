@@ -64,13 +64,7 @@
                                                     role.name}"></span>
                             </div>
                         </td>
-                        <td>
-                            <div th:each="team, itemStat : ${userTmp.teams}">
-                                <span th:text="*{!itemStat.last ?
-                                                    team.name + ', ' :
-                                                    team.name}"></span>
-                            </div>
-                        </td>
+                        <td th:text="${userTmp.team.name}"/>
                         <td><a th:href="@{/admin/user/{id}(id=${userTmp.id})}" class="btn btn-info">
                             <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>

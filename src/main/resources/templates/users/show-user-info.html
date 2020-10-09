@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">User information</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="float-right">
+                                <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-primary">
+                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"/>
+                                        <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <h6 class="heading-small text-muted mb-4">Personal information</h6>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label font-weight-bold" th:for="user.username">Username</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Username" th:field="${user.username}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.email">Email address</label>
+                                        <input type="email" readonly class="form-control-plaintext" placeholder="Email address" th:field="${user.email}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.firstName">First name</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="First name" th:field="${user.firstName}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.lastName">Last name</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Last name" th:field="${user.lastName}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.country">Country</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Country" th:field="${user.country.name}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.location">Location</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Location" th:field="${user.location}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.phoneNumbers">Phone numbers</label>
+                                        <div class="row" th:each="phone : ${user.phoneNumbers}">
+                                            <div class="col-lg-2">
+                                                <input type="text" readonly class="form-control-plaintext" th:field="${phone.type}">
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <input type="text" readonly class="form-control-plaintext" th:field="${phone.country.code}">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" readonly class="form-control-plaintext" th:field="${phone.phoneNumber}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <!-- Company -->
+                        <h6 class="heading-small text-muted mb-4">Company information</h6>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="joiningDate">Joining date</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Joining date" th:field="${user.joiningDate}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="team">Team</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Team" th:field="${user.team.name}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.team.manager.fullname">Team Manager</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Team Manager" th:field="${user.team.manager.fullname}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.directManager.fullname">Direct Manager</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="Direct Manager" th:field="${user.directManager.fullname}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <!-- App -->
+                        <h6 class="heading-small text-muted mb-4">Application</h6>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-control-label font-weight-bold" th:for="user.roles">Roles</label>
+                                        <input type="text" readonly class="form-control-plaintext" placeholder="roles" id="user.roles"
+                                               th:each="role, itemStat : ${user.roles}" th:value="*{!itemStat.last ? role.name + ', ' : role.name}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

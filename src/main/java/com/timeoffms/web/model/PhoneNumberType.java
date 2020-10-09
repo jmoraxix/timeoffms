@@ -6,14 +6,14 @@ public enum PhoneNumberType {
 
 	PRIMARY("Primary"), OTHER("Other");
 
-	@Getter private String type;
+	@Getter private String name;
 
-	private PhoneNumberType(String type) {
-		this.type = type;
+	private PhoneNumberType(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return this.type;
+		return this.name;
 	}
 }

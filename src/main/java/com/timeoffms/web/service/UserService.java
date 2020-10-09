@@ -2,7 +2,6 @@ package com.timeoffms.web.service;
 
 import com.timeoffms.web.dao.UserRepository;
 import com.timeoffms.web.dto.UserRegistrationDto;
-import com.timeoffms.web.model.Team;
 import com.timeoffms.web.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -58,7 +57,7 @@ public class UserService implements UserDetailsService {
 		user.setEmail(registration.getEmail());
 		user.setPassword(passwordEncoder.encode(registration.getPassword()));
 		user.setCountry(registration.getCountry());
-		user.setStartDate(registration.getStartDate());
+		user.setJoiningDate(registration.getJoiningDate());
 		return userRepository.save(user);
 	}
 
@@ -78,12 +77,12 @@ public class UserService implements UserDetailsService {
 				.map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
 
-		for(Team team : user.getTeams()){
-			authorities.add(new SimpleGrantedAuthority("MEMBER_" + team.getName().replaceAll(" ", "_").toUpperCase()));
-			if(team.isApprover(user)){
-				authorities.add(new SimpleGrantedAuthority("APPROVER"));
-			}
+
+
+		if(user.getTeam().getManager().getId().equals(user.getId())){
+			authorities.add(new SimpleGrantedAuthority("APPROVER"));
 		}
-		return authorities.stream().distinct().collect(Collectors.toSet());
+
+		return authorities;
 	}
 }

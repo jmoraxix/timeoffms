@@ -28,8 +28,7 @@ public class PhoneNumber {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private PhoneNumberType phoneNumberType;
+    private PhoneNumberType type;
 
     public String getParsedPhoneNumber(){
         return country.getDialCode() + " " + phoneNumber;

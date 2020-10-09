@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container-lg" th:fragment="home">
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col-10"><h2>My active requests</h2></div>
+                <div class="col-2">
+                    <div class="float-right">
+                        <a type="button" class="btn btn-success" th:href="@{/myRequests/create}">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+                                <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table id="myRequestsTable" class="table table-striped">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th scope="col">Date of request</th>
+                                <th scope="col">Leave dates</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Days</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${activeRequestList?.empty}">
+                                <td colspan="6">There are no active requests</td>
+                            </tr>
+                            <tr th:each="request : ${activeRequestList}">
+                                <td scope="row" th:text="${request.requestedDate}"/>
+                                <td th:text="${request.rangeDates}"/>
+                                <td th:text="${request.timeOffRequestType.name}"/>
+                                <td th:text="${request.totalDays}"/>
+                                <td th:text="${request.timeOffRequestStatus.name}"/>
+                                <td><a th:href="@{/myRequests/{id}(id=${request.id})}" class="btn btn-info">
+                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                        <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                                    </svg>
+                                </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" sec:authorize="hasAuthority('APPROVER')">
+                <div class="col-12">
+                    <h2>My pending approvals</h2>
+                    <table id="myAppovalsTable" class="table table-striped">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th scope="col">Date of request</th>
+                                <th scope="col">Requested By</th>
+                                <th scope="col">Leave dates</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Days</th>
+                                <th scope="col">Approve</th>
+                                <th scope="col">Reject</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${pendingApprovalsList.empty}">
+                                <td colspan="7">There are no pending approvals</td>
+                            </tr>
+                            <tr th:each="approval : ${pendingApprovalsList}">
+                                <td scope="row" th:text="${approval.requestedDate}"/>
+                                <td th:text="${approval.requestedBy}"/>
+                                <td th:text="|From ${approval.startDate} to ${approval.endDate}|"/>
+                                <td th:text="${approval.timeOffRequestType.name}"/>
+                                <td th:text="${approval.totalDays}"/>
+                                <td><a th:href="@{/myApprovals/{id}(id=${request.id},approve)}" class="btn btn-info">
+                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-check-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+                                    </svg>
+                                </a></td>th:href="@{/requests/{id}(id=${request.id},reject)}" class="btn btn-danger">
+                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                                    </svg>
+                                </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <!-- AVAILABLE DAYS -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="text-center available-days" th:text="${currentUser.availableVacationDays}"/>
+                            <hr class="solid">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="text-center">available days</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /AVAILABLE DAYS -->
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: notifications_modal"></div>
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>
