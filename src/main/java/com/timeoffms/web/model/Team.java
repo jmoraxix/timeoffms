@@ -1,12 +1,12 @@
 package com.timeoffms.web.model;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,28 +24,24 @@ public class Team {
 	@Column(unique = true)
 	private String name;
 
-	private String location;
+	@ManyToOne
+	@NotNull
+	@JoinColumn(name="manager_id")
+	private User manager;
 
-	@ManyToMany
+	@OneToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	@JoinColumn(name="team_id")
 	private List<User> members;
 
 	@ManyToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JoinTable(name = "default_approver", joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "approver_id", referencedColumnName = "id"))
-	private List<User> approvers;
-
-	public boolean isApprover(User user){
-		return this.approvers.stream().anyMatch(approver -> approver.getUsername().equals(user.getUsername()));
-	}
+	@JoinTable(name = "alternate_team_approver", joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "approver_id",
+			referencedColumnName = "id"))
+	private List<User> alternateApprovers;
 
 	public List<User> getMembers(){
 		return members == null ? new ArrayList<>() : members;
-	}
-
-	public List<User> getApprovers(){
-		return approvers == null ? new ArrayList<>() : approvers;
 	}
 
 	public void addMember(User user){
@@ -57,12 +53,15 @@ public class Team {
 		members.remove(user);
 	}
 
-	public void addApprover(User user){
-		if(approvers == null) approvers = new ArrayList<>();
-		approvers.add(user);
-	}
-
-	public void removeApprover(User user){
-		members.remove(user);
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("Team{");
+		sb.append("id=").append(id);
+		sb.append(", name='").append(name).append('\'');
+		sb.append(", manager=").append(manager);
+		sb.append(", members=").append(members.stream().map(m -> m.getFullname()).reduce(", ", String::concat));
+		sb.append(", alternateApprovers=").append(alternateApprovers);
+		sb.append('}');
+		return sb.toString();
 	}
 }
