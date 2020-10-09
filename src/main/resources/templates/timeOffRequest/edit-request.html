@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <form id="requestForm" th:action="@{''(save)}" method="post" th:object="${request}">
+                <input type="hidden" th:field="*{id}">
+                <div class="form-group row">
+                    <div class="col-10">
+                        <h1>Request info</h1>
+                    </div>
+                </div>
+                <div class="form-group" sec:authorize="hasAnyAuthority('HR', 'ADMIN')">
+                    <div class="col-12">
+                        <label th:for="requestedBy" th:text="${title}"/>
+                        <select class="form-control" th:field="*{requestedBy}">
+                            <option selected disabled value="">Choose...</option>
+                            <option th:each="approverOpt : ${userList}"
+                                    th:value="${approverOpt.id}"
+                                    th:text="${approverOpt.fullname}">User
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" sec:authorize="!hasAnyAuthority('HR', 'ADMIN')">
+                    <input type="hidden" th:field="*{requestedBy.id}" th:value="${currentUser.id}">
+                </div>
+                <div class="form-group">
+                    <div class="col-12">
+                        <label th:for="timeOffRequestType">Request type</label>
+                        <select class="form-control" th:field="*{timeOffRequestType}">
+                            <option selected disabled value="">Choose...</option>
+                            <option th:each="typeOpt : ${T(com.timeoffms.web.model.TimeOffRequestType).values()}"
+                                    th:value="${typeOpt}"
+                                    th:text="${typeOpt.name}"
+                                    th:selected="${typeOpt == timeOffRequestType}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-4">
+                            <label th:for="startDate">Start date</label>
+                            <input type="datetime-local" class="form-control"
+                                   th:field="*{startDate}">
+<!--                            th:value="${#temporals.format(request.endDate, 'dd-MM-yyyy')}"-->
+<!--                            <div class="input-group date" data-provide="datepicker">-->
+<!--                                <input type="text" class="form-control" th:field="*{startDate}">-->
+<!--                                <div class="input-group-addon">-->
+<!--                                        <span class="glyphicon glyphicon-th"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+                        <div class="col-4">
+                            <label th:for="endDate">End date</label>
+                            <input type="datetime-local" class="form-control"
+                                   th:field="*{endDate}">
+<!--                            th:value="${#temporals.format(request.endDate, 'dd-MM-yyyy')}"-->
+<!--                            <div class="input-group date" data-provide="datepicker">-->
+<!--                                <input type="text" class="form-control" th:field="*{endDate}">-->
+<!--                                <div class="input-group-addon">-->
+<!--                                    <span class="glyphicon glyphicon-th"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-12">
+                        <label th:for="reason">Reason</label>
+                        <textarea th:field="*{reason}" class="form-control" rows="3" maxlength="250"></textarea>
+                    </div>
+                </div>
+                <input type="hidden" th:field="*{timeOffRequestStatus}" th:value="${T(com.timeoffms.web.model.TimeOffRequestStatus).PENDING_APPROVAL}">
+                <input type="hidden" th:field="*{updatedBy.id}" th:value="${currentUser.id}">
+                <div class="form-group">
+                    <a th:href="@{{url}(url=${goBackUrl})}" class="btn btn-warning">Back</a>
+                    <button id="saveBtn" type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-center available-days" th:text="${currentUser.availableVacationDays}"/>
+                    <hr class="solid">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-center">available days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    <script th:src="@{/js/bootstrap-datepicker.js}"></script>-->
+    <script th:src="@{/js/editRequest.js}"></script>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

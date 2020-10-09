@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form th:action="@{/admin/timeoffrequest/type/{mode}/{id}(mode=${editMode},id=${type.code})}" method="post" th:object="${type}">
+                <label>Time Off Request Status</label>
+                <div class="form-group">
+                    <input type="text" th:field="*{code}" placeholder="Status code" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" th:field="*{description}" placeholder="Status description" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <a th:href="@{/admin/timeoffrequest/type}" class="btn btn-warning">Back</a>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

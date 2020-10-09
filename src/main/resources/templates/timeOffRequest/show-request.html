@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: common_header(_,_)">
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form th:action="@{/requests/{id}(id=${request.id})}" method="post" th:object="${request}">
+                <div class="form-group row">
+                    <div class="col-10">
+                        <h1>View request</h1>
+                    </div>
+                    <div class="col-1">
+                        <a th:href="@{/requests/{id}/edit(id=${request.id})})}" class="btn btn-primary">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"/>
+                                <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="col-1">
+                        <a th:href="{/requests/{id}(id=${request.id},cancel)}" class="btn btn-danger">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-8">
+                        <label th:for="requestedBy">Requested by</label>
+                        <input type="text" th:field="*{requestedBy.fullname}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-8">
+                        <label th:for="timeOffRequestType">Request type</label>
+                        <input type="text" th:field="*{timeOffRequestType.name}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-8">
+                        <label th:for="rangeDates">Request dates</label>
+                        <input type="text" th:field="*{rangeDates}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-8">
+                        <label th:for="reason">Reason</label>
+                        <textarea th:field="*{reason}" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-8">
+                        <label th:for="timeOffRequestStatus">Status</label>
+                        <input type="text" th:field="*{timeOffRequestStatus.name}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-8">
+                        <label th:for="updatedBy">Last update by</label>
+                        <input type="text" th:field="*{updatedBy.fullname}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <a th:href="@{/admin/user}" class="btn btn-warning">Back</a>
+<!--                    <button name="submit" type="submit" class="btn btn-primary">Submit</button>-->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>
