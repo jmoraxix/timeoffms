@@ -71,7 +71,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:if="${pendingApprovalsList.empty}">
+                            <tr th:if="${pendingApprovalsList?.empty}">
                                 <td colspan="7">There are no pending approvals</td>
                             </tr>
                             <tr th:each="approval : ${pendingApprovalsList}">
@@ -104,7 +104,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12">
-                            <p class="text-center available-days" th:text="${currentUser.availableVacationDays}"/>
+                            <p class="text-center available-days" th:text="${availableVacationDays}"/>
                             <hr class="solid">
                         </div>
                     </div>

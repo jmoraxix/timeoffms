@@ -1,6 +1,5 @@
 package com.timeoffms.web.controller;
 
-import com.timeoffms.web.model.User;
 import com.timeoffms.web.service.TimeOffRequestService;
 import com.timeoffms.web.service.UserService;
 import com.timeoffms.web.utils.Utils;
@@ -13,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @Log4j2
-public class MainController {
+public class HomeController {
 
     @Autowired
     private UserService userService;
@@ -28,10 +27,10 @@ public class MainController {
 
     @GetMapping("/")
     public ModelAndView showHome(ModelMap model) {
-        User currentUser = Utils.getCurrentUser(userService);
-        model.addAttribute("currentUser", currentUser);
+		model.addAttribute("availableVacationDays", Utils.getCurrentUser(userService).getAvailableVacationDays());
         model.addAttribute("activeRequestList", timeOffRequestService.findAllActiveFromCurrentUser());
-        if(currentUser.hasRole("APPROVER")) model.addAttribute("pendingApprovalsList", timeOffRequestService.findAllToApproveByCurrentUser());
+        if(Utils.currentAuthUserHasRole("APPROVER"))
+        	model.addAttribute("pendingApprovalsList", timeOffRequestService.findAllToApproveByCurrentUser());
         return new ModelAndView("home/home", model);
     }
 }

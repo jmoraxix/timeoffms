@@ -7,7 +7,9 @@ import com.timeoffms.web.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TimeOffRequestService {
@@ -34,7 +36,7 @@ public class TimeOffRequestService {
 	}
 
 	public List<TimeOffRequest> findAllByUser(User user){
-		return timeOffRequestRepository.findAllByUser(user);
+		return Optional.ofNullable(timeOffRequestRepository.findAllByUser(user)).orElse(new ArrayList<>());
 	}
 
 	public List<TimeOffRequest> findAllActive(){
@@ -46,7 +48,7 @@ public class TimeOffRequestService {
 	}
 
 	public List<TimeOffRequest> findAllActiveFromUser(User user){
-		return timeOffRequestRepository.findAllActiveByUser(user);
+		return Optional.ofNullable(timeOffRequestRepository.findAllActiveByUser(user)).orElse(new ArrayList<>());
 	}
 
 	public TimeOffRequest findById(Long id){
