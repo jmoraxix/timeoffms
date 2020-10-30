@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <form id="requestForm" th:action="@{''(save)}" method="post" th:object="${request}">
+            <form id="requestForm" th:action="@{{base_url}(base_url=${#request.requestURI}, save)}" method="post" th:object="${request}">
                 <input type="hidden" th:field="*{id}">
                 <div class="form-group row">
                     <div class="col-10">

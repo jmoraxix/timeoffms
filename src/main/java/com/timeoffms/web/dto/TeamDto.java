@@ -16,25 +16,19 @@ public class TeamDto {
 
 	private String location;
 
-	private List<UserDto> members;
+	private UserDto manager;
 
-	private List<UserDto> approvers;
+	private List<UserDto> members = new ArrayList<>();
+
+	private List<UserDto> approvers = new ArrayList<>();
 
 	public void addMember(UserDto userDto){
 		if(members == null) members = new ArrayList<>();
 		members.add(userDto);
 	}
 
-	public void removeMember(int index){
-		members.remove(index);
-	}
-
 	public void addApprover(UserDto userDto){
 		if(approvers == null) approvers = new ArrayList<>();
 		approvers.add(userDto);
-	}
-
-	public void removeApprover(int index){
-		approvers.remove(index);
 	}
 }

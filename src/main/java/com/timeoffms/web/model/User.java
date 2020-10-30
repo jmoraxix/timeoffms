@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @EntityListeners({UserJpaCallbacksListener.class})
@@ -63,17 +64,18 @@ public class User {
 	@JoinColumn(name= "direct_manager_id")
 	private User directManager;
 
-	@NotNull
+	@ManyToMany
 	@ToString.Exclude
-    @ManyToOne
-    private Team team;
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName =
+			"id"))
+	private List<Team> teams;
 
 	@ManyToMany
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private List<Role> roles;
-
 
 	//    @ManyToMany
 //    @ToString.Exclude
@@ -108,6 +110,10 @@ public class User {
         return this.firstName + " " + this.lastName;
     }
 
+	public List<Team> getTeams(){
+		return Optional.ofNullable(teams).orElse(new ArrayList<>());
+	}
+
     public boolean isApprover(){
         return this.hasRole("APPROVER");
     }
@@ -121,17 +127,12 @@ public class User {
 		final StringBuffer sb = new StringBuffer("User{");
 		sb.append("id=").append(id);
 		sb.append(", username='").append(username).append('\'');
-		sb.append(", password='").append(password).append('\'');
 		sb.append(", email='").append(email).append('\'');
 		sb.append(", firstName='").append(firstName).append('\'');
 		sb.append(", lastName='").append(lastName).append('\'');
-		sb.append(", joiningDate=").append(joiningDate);
-		sb.append(", phoneNumbers=").append(phoneNumbers);
 		sb.append(", country=").append(country);
 		sb.append(", location='").append(location).append('\'');
 		sb.append(", directManager=").append(directManager.getFullname());
-		sb.append(", team=").append(team);
-		sb.append(", roles=").append(roles);
 		sb.append('}');
 		return sb.toString();
 	}

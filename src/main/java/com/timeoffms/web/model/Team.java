@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -29,28 +30,24 @@ public class Team {
 	@JoinColumn(name="manager_id")
 	private User manager;
 
-	@OneToMany
+	@ManyToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JoinColumn(name="team_id")
+	@JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName =
+			"id"))
 	private List<User> members;
 
 	@ManyToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JoinTable(name = "alternate_team_approver", joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "approver_id",
+	@JoinTable(name = "team_approver", joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "approver_id",
 			referencedColumnName = "id"))
-	private List<User> alternateApprovers;
+	private List<User> approvers;
 
 	public List<User> getMembers(){
-		return members == null ? new ArrayList<>() : members;
+		return Optional.ofNullable(members).orElse(new ArrayList<>());
 	}
 
-	public void addMember(User user){
-		if(members == null) members = new ArrayList<>();
-		members.add(user);
-	}
-
-	public void removeMember(User user){
-		members.remove(user);
+	public List<User> getApprovers(){
+		return Optional.ofNullable(approvers).orElse(new ArrayList<>());
 	}
 
 	@Override
@@ -58,9 +55,9 @@ public class Team {
 		final StringBuffer sb = new StringBuffer("Team{");
 		sb.append("id=").append(id);
 		sb.append(", name='").append(name).append('\'');
-		sb.append(", manager=").append(manager);
+		sb.append(", manager=").append(manager.getFullname());
 		sb.append(", members=").append(members.stream().map(m -> m.getFullname()).reduce(", ", String::concat));
-		sb.append(", alternateApprovers=").append(alternateApprovers);
+		sb.append(", alternateApprovers=").append(approvers.stream().map(m -> m.getFullname()).reduce(", ", String::concat));
 		sb.append('}');
 		return sb.toString();
 	}

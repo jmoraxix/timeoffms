@@ -40,7 +40,7 @@ public class TeamController {
 
     @GetMapping(path = {"/create", "/edit/{id}"})
     public ModelAndView showForm(@PathVariable(required = false) Long id, ModelMap model){
-        model.addAttribute("team", TeamMapper.MAPPER.teamToTeamDto(teamService.findIfExists(id)));
+        model.addAttribute("team", TeamMapper.MAPPER.teamToTeamDto(id == null ? new Team() : teamService.findTeam(id)));
         model.addAttribute("userList", userService.findAll());
         return new ModelAndView("teams/edit-team", model);
     }
@@ -48,7 +48,7 @@ public class TeamController {
     @PostMapping(params = "save", path = {"/create", "/edit/{id}"})
     public ModelAndView saveTeam(@Valid @ModelAttribute("team") TeamDto teamDto, BindingResult result, ModelMap model, RedirectAttributes redirectAttrs) {
         teamService.saveTeam(TeamMapper.MAPPER.teamDtoToTeam(teamDto));
-        redirectAttrs.addFlashAttribute("message", "Team created successfully");
+        redirectAttrs.addFlashAttribute("message", "Team updated successfully");
         return new ModelAndView("redirect:/admin/teams");
     }
 
@@ -58,21 +58,9 @@ public class TeamController {
         return renderAjaxFragment(model, request, "teams/edit-team :: #members", "teams/edit-team");
     }
 
-    @PostMapping(params = "removeMember", path = {"/create", "/edit/{id}"})
-    public ModelAndView removeMember(@ModelAttribute("team") TeamDto teamDto, @RequestParam("removeMember") int index, ModelMap model, HttpServletRequest request) {
-        teamDto.removeMember(index);
-        return renderAjaxFragment(model, request, "teams/edit-team :: #members", "teams/edit-team");
-    }
-
     @PostMapping(params = "addApprover", path = {"/create", "/edit/{id}"})
     public ModelAndView addApprover(@ModelAttribute("team") TeamDto teamDto, @RequestParam("addApprover") Long approverId, ModelMap model, HttpServletRequest request) {
         teamDto.addApprover(UserMapper.MAPPER.userToUserDto(userService.findById(approverId)));;
-        return renderAjaxFragment(model, request, "teams/edit-team :: #approvers", "teams/edit-team");
-    }
-
-    @PostMapping(params = "removeApprover", path = {"/create", "/edit/{id}"})
-    public ModelAndView removeApprover(@ModelAttribute("team") TeamDto teamDto, @RequestParam("removeApprover") int index, ModelMap model, HttpServletRequest request) {
-        teamDto.removeApprover(index);;
         return renderAjaxFragment(model, request, "teams/edit-team :: #approvers", "teams/edit-team");
     }
 

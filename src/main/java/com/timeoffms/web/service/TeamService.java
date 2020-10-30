@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeamService {
@@ -18,13 +19,8 @@ public class TeamService {
 	}
 
 	public Team findTeam(Long id){
-		return teamRepository.findById(id).get();
+		return Optional.ofNullable(teamRepository.findById(id).get()).orElse(new Team());
 	}
-
-	public Team findIfExists(Long id){
-		return id == null ? new Team() : findTeam(id);
-	}
-
 	public void saveTeam(Team team){
 		teamRepository.save(team);
 	}

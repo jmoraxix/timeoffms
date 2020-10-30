@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/layout :: common_header(_,_)">
 </head>
 <body>
@@ -11,7 +11,7 @@
                 <div class="col-10"><h2>Requests</h2></div>
                 <div class="col-2">
                     <div class="float-right">
-                        <a type="button" class="btn btn-success" th:href="@{''+/create}">
+                        <a type="button" class="btn btn-success" th:href="@{{base_url}/create(base_url=${#request.requestURI})}">
                             <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
                                 <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>

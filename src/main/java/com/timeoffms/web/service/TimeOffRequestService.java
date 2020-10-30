@@ -31,6 +31,7 @@ public class TimeOffRequestService {
 	public List<TimeOffRequest> findAllToApproveByCurrentUser(){
 		return findAllByUser(Utils.getCurrentUser(userService));
 	}
+
 	public List<TimeOffRequest> findAllToApproveByUser(User user){
 		return timeOffRequestRepository.findAllToApproveByUser(user.getId());
 	}
@@ -56,7 +57,7 @@ public class TimeOffRequestService {
 	}
 
 	public TimeOffRequest findIfExists(Long id){
-		return id == null ? new TimeOffRequest() : findById(id);
+		return Optional.ofNullable(findById(id)).orElse(new TimeOffRequest());
 	}
 
 	public void save(TimeOffRequest timeOffRequest){

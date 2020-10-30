@@ -14,7 +14,7 @@
                             <img class="img-fluid" th:src="@{/img/error-404.jpg}"/>
                             <div class="text-center mt-4">
                                 <p class="lead">Page not found.</p>
-                                <a class="btn btn-link" th:href="@{__${#httpServletRequest.requestURI}__}">
+                                <a class="btn btn-link" th:href="@{__${#request.requestURI}__}">
                                     <i class="fas fa-arrow-left mr-1"></i>
                                     Go back
                                 </a>

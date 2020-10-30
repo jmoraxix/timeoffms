@@ -42,4 +42,10 @@ public class UserRegistrationDto {
 	@NotNull
 	private Country country;
 
+	@NotNull
+	private String location;
+
+	@NotNull
+	private UserDto manager;
+
 }

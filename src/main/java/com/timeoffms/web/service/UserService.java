@@ -77,11 +77,8 @@ public class UserService implements UserDetailsService {
 				.map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
 
-
-
-		if(user.getTeam().getManager().getId().equals(user.getId())){
-			authorities.add(new SimpleGrantedAuthority("APPROVER"));
-		}
+		boolean isManager = user.getTeams().stream().anyMatch(t -> t.getManager().getId().equals(user.getId()));
+		if(isManager) authorities.add(new SimpleGrantedAuthority("MANAGER"));
 
 		return authorities;
 	}
