@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security4">
 <head th:fragment="common_header(title,links)">
     <!-- ~{::title},~{::link} -->
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -76,10 +76,10 @@
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item dropdown">
                     <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="navbarDropdownUser" role="button">
-                        Welcome <span sec:authentication="name">Username</span>
+                        Welcome <span th:text="${session.user.firstName}">Username</span>
                     </a>
                     <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" th:href="@{/user/{id}(id=${#authentication.name})}">My account</a>
+                        <a class="dropdown-item" th:href="@{/user/{id}(id=${session.user.id})}">My account</a>
                         <span class="dropdown-item">Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span></span>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/logout" th:href="@{/logout}">Logout</a>
